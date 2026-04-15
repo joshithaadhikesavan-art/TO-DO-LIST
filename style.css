@@ -1,0 +1,127 @@
+body {
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+
+    /* Gradient animation */
+    background: linear-gradient(-45deg, #667eea, #764ba2, #ff6a88, #00c9ff);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Gradient animation */
+@keyframes gradientMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+}
+
+/* Container */
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 380px;
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+/* Input */
+.input-section {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background: #667eea;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Filters */
+.filters {
+    margin-top: 10px;
+}
+
+.filters button {
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+/* Task list */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 8px 0;
+    animation: slideIn 0.3s ease;
+}
+
+/* Checkbox */
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.completed span {
+    text-decoration: line-through;
+    color: gray;
+}
+
+/* Buttons */
+.actions button {
+    margin-left: 5px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.delete {
+    background: red;
+}
+
+.edit {
+    background: orange;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-10px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+}

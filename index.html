@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced To-Do App</title>
+
+<style>
+/* ===== BODY + ANIMATED BACKGROUND ===== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+
+    background: linear-gradient(-45deg, #667eea, #764ba2, #ff6a88, #00c9ff);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes gradientMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* ===== FLOATING BUBBLES ===== */
+.bg-animation span {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    animation: float 15s linear infinite;
+}
+
+.bg-animation span:nth-child(1) { left: 10%; animation-duration: 12s; }
+.bg-animation span:nth-child(2) { left: 40%; animation-duration: 18s; }
+.bg-animation span:nth-child(3) { left: 70%; animation-duration: 10s; }
+.bg-animation span:nth-child(4) { left: 85%; animation-duration: 20s; }
+
+@keyframes float {
+    0% { transform: translateY(100vh) scale(0); }
+    100% { transform: translateY(-10vh) scale(1); }
+}
+
+/* ===== CONTAINER (GLASS EFFECT) ===== */
+.container {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    padding: 20px;
+    border-radius: 20px;
+    width: 380px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease;
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+/* ===== INPUT ===== */
+.input-section {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background: #ffffff30;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background: #ffffff50;
+}
+
+/* ===== FILTERS ===== */
+.filters button {
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+/* ===== TASK LIST ===== */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 8px 0;
+    animation: slideIn 0.3s ease;
+}
+
+/* LEFT SIDE */
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* COMPLETED */
+.completed span {
+    text-decoration: line-through;
+    color: #ddd;
+}
+
+/* ACTION BUTTONS */
+.actions button {
+    margin-left: 5px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.delete { background: red; }
+.edit { background: orange; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-10px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating bubbles -->
+<div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<div class="container">
+    <h1>✨ My To-Do List</h1>
+
+    <div class="input-section">
+        <input type="text" id="taskInput" placeholder="Enter a task...">
+        <button onclick="addTask()">Add</button>
+    </div>
+
+    <div class="filters">
+        <button onclick="filterTasks('all')">All</button>
+        <button onclick="filterTasks('completed')">Completed</button>
+        <button onclick="filterTasks('pending')">Pending</button>
+    </div>
+
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+document.addEventListener("DOMContentLoaded", renderTasks);
+
+// ADD TASK
+function addTask() {
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (text === "") return alert("Enter a task!");
+
+    tasks.push({ text: text, completed: false });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    input.value = "";
+    renderTasks();
+}
+
+// RENDER
+function renderTasks(filter = "all") {
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        if (
+            (filter === "completed" && !task.completed) ||
+            (filter === "pending" && task.completed)
+        ) return;
+
+        const li = document.createElement("li");
+        li.className = task.completed ? "completed" : "";
+
+        li.innerHTML = `
+            <div class="task-left">
+                <input type="checkbox" ${task.completed ? "checked" : ""}
+                onchange="toggleTask(${index})">
+                <span>${task.text}</span>
+            </div>
+
+            <div class="actions">
+                <button class="edit" onclick="editTask(${index})">✏️</button>
+                <button class="delete" onclick="deleteTask(${index})">X</button>
+            </div>
+        `;
+
+        list.appendChild(li);
+    });
+}
+
+// TOGGLE
+function toggleTask(index) {
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+}
+
+// DELETE
+function deleteTask(index) {
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+}
+
+// EDIT
+function editTask(index) {
+    const newText = prompt("Edit task:", tasks[index].text);
+    if (newText && newText.trim() !== "") {
+        tasks[index].text = newText;
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks();
+    }
+}
+
+// FILTER
+function filterTasks(type) {
+    renderTasks(type);
+}
+
+// ENTER KEY
+document.getElementById("taskInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") addTask();
+});
+</script>
+
+</body>
+</html>
