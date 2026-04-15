@@ -17,8 +17,6 @@ A simple and interactive **To-Do List web app** built using HTML, CSS, and JavaS
 * JavaScript
 
 ##  How to Run
-
-Open `index.html` in a browser
-or use **Live Server in VS Code**
+https://joshithaadhikesavan-art.github.io/TO-DO-LIST/
 
 
